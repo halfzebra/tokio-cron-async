@@ -2,6 +2,27 @@
 
 Simple CRON scheduler using Tokio for async jobs.
 
+```rs
+use tokio_cron_async::JobSchedule;
+use tokio::time::{sleep, Duration};
+
+#[tokio::main]
+async fn main() {
+    let schedule: JobSchedule = JobSchedule::new();
+
+    schedule.add("1/10 * * * * *", Box::new(|_uuid| {
+        Box::pin(async move {
+            println!("10 seconds have passed");
+            sleep(Duration::from_secs(10)).await;
+        })
+    }))
+    .await
+    .ok();
+
+    tokio::spawn(schedule.run()).await.ok();
+}
+```
+
 ## Motivation
 
 > Why?
