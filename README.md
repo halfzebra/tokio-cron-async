@@ -7,7 +7,7 @@ use tokio_cron_async::JobSchedule;
 use tokio::time::{sleep, Duration};
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn Error>> {
     let schedule: JobSchedule = JobSchedule::new();
 
     schedule.add("1/10 * * * * *", Box::new(|_uuid| {
@@ -16,10 +16,11 @@ async fn main() {
             sleep(Duration::from_secs(10)).await;
         })
     }))
-    .await
-    .ok();
+    .await?;
 
-    tokio::spawn(schedule.run()).await.ok();
+    tokio::spawn(schedule.run()).await?;
+
+    Ok(())
 }
 ```
 
