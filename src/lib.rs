@@ -2,7 +2,6 @@ use std::future::Future;
 use std::pin::Pin;
 use std::str::FromStr;
 use std::sync::Arc;
-
 use std::collections::HashMap;  
 
 use chrono::{DateTime, Local};
@@ -58,6 +57,19 @@ impl Job {
     }
 }
 
+
+/// CRON job scheduler.
+///
+/// Allows adding, removing and running CRN jobs.
+///
+/// # Examples
+///
+/// ```
+/// use tokio_cron_async::JobSchedule;
+///
+/// // A new instance is ready for use:
+/// let schedule: JobSchedule = JobSchedule::new();
+/// ```
 pub struct JobSchedule(Arc<Mutex<HashMap<Uuid, Arc<Mutex<Job>>>>>);
 
 impl JobSchedule {
