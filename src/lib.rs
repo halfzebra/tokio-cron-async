@@ -1,3 +1,7 @@
+#![deny(missing_docs)]
+
+//! CRON scheduler using Tokio for async jobs.
+
 use std::future::Future;
 use std::pin::Pin;
 use std::str::FromStr;
@@ -11,7 +15,8 @@ use tokio::sync::Mutex;
 use tokio::task::JoinHandle;
 use tokio::time::{sleep, Duration};
 
-pub type Callback = Box<dyn Fn(Uuid) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
+/// Used to represent a thread safe function, containing an async block
+type Callback = Box<dyn Fn(Uuid) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
 struct Job {
     callback: Callback,
     schedule: Schedule,
@@ -73,10 +78,13 @@ impl Job {
 pub struct JobSchedule(Arc<Mutex<HashMap<Uuid, Arc<Mutex<Job>>>>>);
 
 impl JobSchedule {
+
+    /// Create a new instance of `JobSchedule`
     pub fn new() -> Self {
         JobSchedule(Arc::new(Mutex::new(HashMap::new())))
     }
 
+    /// Add a new CRON job using a callback with async code.
     pub async fn add(
         &self,
         cron_pattern: &'static str,
@@ -95,6 +103,7 @@ impl JobSchedule {
         }
     }
 
+    /// Remove a job from the schedule by it's UUID.
     pub async fn remove(&self, uuid: Uuid) -> Result<(), &'static str> {
         match self.0.lock().await.remove(&uuid) {
             Some(_job) => Ok(()),
@@ -102,6 +111,7 @@ impl JobSchedule {
         }
     }
 
+    /// Start the schedule runner.
     pub fn run(&self) -> JoinHandle<()> {
         let clone = Arc::clone(&self.0);
 
