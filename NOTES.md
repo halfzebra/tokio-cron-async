@@ -1,6 +1,10 @@
 # Notes
 
-## First itreration
+## Core concept
+
+This part explains the core implementation behind the CRON task scheduler.
+
+### First iteration
 
 Some time was needed to figure out how the type for async callback would look.
 
@@ -42,7 +46,7 @@ async fn main() {
 }
 ```
 
-## Second iteration
+### Second iteration
 
 After experiencing issues with [reqwest](https://github.com/seanmonstar/reqwest), I've got a [suggestion for simplification](https://users.rust-lang.org/t/sharing-futures-across-threads-insidie-async-block-callbacks-shared-across-threads/65064/4):
 
@@ -50,7 +54,7 @@ After experiencing issues with [reqwest](https://github.com/seanmonstar/reqwest)
 pub type Callback = Box<dyn Fn(usize) -> Pin<Box<dyn Future<Output=()> + Send>> + Send + Sync>;
 ```
 
-## Third iteration
+### Third iteration
 
 It became apparent that futures would be executed sequentially if they are awaited in a loop.
 Instead of queueing Futures, it's necessary to await every future in a separate `tokio::spawn` task.
@@ -96,7 +100,45 @@ async fn main() {
 }
 ```
 
-## Links
+## Macro idea
+
+Maybe it's worth attempting a clean-up of the syntax for adding the jobs?
+
+```rs
+schedule
+    .add(
+        "1/20 * * * * *",
+        Box::new(|_id| {
+            Box::pin(async move {
+                sleep(Duration::from_secs(20)).await;
+            })
+        }),
+    )
+    .await?;
+```
+
+A macro might help simplify some of the code:
+
+```
+schedule
+    .add(
+        "1/20 * * * * *",
+        cron_job!(|_id| async move {
+            sleep(Duration::from_secs(20)).await;
+        }),
+    )
+    .await?;
+```
+
+- https://dev.to/rogertorres/first-steps-with-rust-declarative-macros-1f8m
+- https://github.com/dtolnay/cargo-expand
+- 
+
+## Authoring a library
+
+Here I'm noting all the materials I found helpful during the library development process:
+
+- [Guide on how to write documentation for a Rust crate](https://blog.guillaume-gomez.fr/articles/2020-03-12+Guide+on+how+to+write+documentation+for+a+Rust+crate)
 
 Closures, Futures and async-await primer:
 

@@ -1,6 +1,6 @@
 # tokio-cron-async
 
-Simple CRON scheduler using Tokio for async jobs.
+CRON scheduler using Tokio for async jobs.
 
 ```rs
 use tokio_cron_async::JobSchedule;
