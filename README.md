@@ -32,7 +32,7 @@ I wanted something like [mvniekerk/tokio-cron-scheduler][1], but with async jobs
 
 > Why weren't this contributed to the mentioned repo?
 
-Because I'm not confident in this implementation and the project I've built this for can tolerate potential risks.
+It's a bit unclear wether the API from this repo is suitable for different use-cases and project I've built this for can tolerate potential risk.
 It might be contributed there at later stages.
 
 ## Inspiration

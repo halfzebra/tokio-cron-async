@@ -17,6 +17,7 @@ use tokio::time::{sleep, Duration};
 
 /// Used to represent a thread safe function, containing an async block
 type Callback = Box<dyn Fn(Uuid) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
+
 struct Job {
     callback: Callback,
     schedule: Schedule,
