@@ -1,4 +1,4 @@
-# tokio-cron-async
+# 🕒 tokio-cron-async
 
 CRON scheduler using Tokio for async jobs.
 
