@@ -10,7 +10,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     schedule
         .add(
-            "1/10 * * * * *",
+            "1/10 * * * * *".to_string(),
             Box::new(|_i| {
                 Box::pin(async move {
                     println!("1/10 {}", Local::now().time());
@@ -22,7 +22,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     schedule
         .add(
-            "1/20 * * * * *",
+            "1/20 * * * * *".to_string(),
             Box::new(|_i| {
                 Box::pin(async move {
                     println!("1/20 {}", Local::now().time());

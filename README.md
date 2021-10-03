@@ -10,7 +10,7 @@ use tokio::time::{sleep, Duration};
 async fn main() -> Result<(), Box<dyn Error>> {
     let schedule: JobSchedule = JobSchedule::new();
 
-    schedule.add("1/10 * * * * *", Box::new(|_uuid| {
+    schedule.add("1/10 * * * * *".to_string(), Box::new(|_uuid| {
         Box::pin(async move {
             println!("10 seconds have passed");
             sleep(Duration::from_secs(10)).await;

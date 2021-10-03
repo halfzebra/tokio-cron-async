@@ -88,10 +88,10 @@ impl JobSchedule {
     /// Add a new CRON job using a callback with async code.
     pub async fn add(
         &self,
-        cron_pattern: &'static str,
+        cron_pattern: String,
         job_cb: Callback,
     ) -> Result<Uuid, &'static str> {
-        match Schedule::from_str(cron_pattern) {
+        match Schedule::from_str(cron_pattern.as_str()) {
             Ok(sched) => match Job::new(sched, job_cb) {
                 Ok(job) => {
                     let uuid = job.get_uuid();
